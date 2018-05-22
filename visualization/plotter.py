@@ -100,5 +100,49 @@ def create_heatmap():
     plt.savefig('/home/striker/Factor-Analysis/Output/Silhoutte.png')
     plt.close()
 
+def create_new_heatmap(year_index):
+    y1 = []
+    for i in range(0, 43):
+        y1.append(i)
+
+    fig, ax1 = plt.subplots()
+    pd_pca = pd.read_csv('/home/striker/Downloads/Processed Final Result/PCA_Cluster.csv', header=None)
+    pd_lpa = pd.read_csv('/home/striker/Downloads/Processed Final Result/LPA_Clus.csv', header=None)
+    pd_lou = pd.read_csv('/home/striker/Downloads/Processed Final Result/Louvain_Clus.csv', header=None)
+    pd_fuzzy = pd.read_csv('/home/striker/Downloads/Processed Final Result/Fuzzy_Clus.csv', header=None)
+    pd_index = pd.read_csv('/home/striker/Downloads/Processed Final Result/New_order_by_countries.csv')
+
+    new_pd = pd.DataFrame()
+    new_pd["PCA"], new_pd["LPA"], new_pd["Louvain"], new_pd["Fuzzy"] = pd_pca[year_index], pd_lpa[year_index], pd_lou[year_index], pd_fuzzy[year_index]
+    new_pd["Country"], new_pd["index"] = pd_index["country_code"], pd_index["index"]
+    new_pd["Region"] = pd_index["Region"]
+    new_pd = new_pd.sort_values('index')
+    new_pd = new_pd[new_pd["Country"] != "ROW"]
+    regions = new_pd["Region"].unique()
+
+    horizontal_lines= []
+    for region in regions:
+        horizontal_lines.append(new_pd[new_pd["Region"] == region].values[-1][-2])
+
+    sns.heatmap(new_pd[["PCA", "LPA", "Louvain", "Fuzzy"]], cmap="YlGnBu", linewidths=1)
+    x1 = [0, 1, 2, 3]
+    squad = [' PCA', '  LPA', ' Louvain', ' Fuzzy']
+
+
+    ax1.set_xticklabels(squad,  ha ='center', minor=False)
+    ax1.set_xticks(x1)
+    plt.xlabel('Models')
+
+    ax1.set_yticks(y1)
+    ax1.set_yticklabels(new_pd["Country"], minor=False, rotation='horizontal')
+    plt.ylabel('Country')
+
+    for line in horizontal_lines:
+        ax1.axhline(line, 0, 1, linewidth=3, c='r')
+    # plt.show()
+    print ax1.get_xticklabels()
+    plt.savefig('/home/striker/Documents/Factor-Analysis/Graph/Cluster_2014.png')
+    plt.close()
+
 if __name__ == '__main__':
-    create_heatmap()
+    create_new_heatmap(15)
