@@ -102,14 +102,14 @@ def create_heatmap():
 
 def create_new_heatmap(year_index):
     y1 = []
-    for i in range(0, 43):
+    for i in range(0, 44):
         y1.append(i)
 
     fig, ax1 = plt.subplots()
-    pd_pca = pd.read_csv('/home/striker/Downloads/Processed Final Result/PCA_Cluster.csv', header=None)
-    pd_lpa = pd.read_csv('/home/striker/Downloads/Processed Final Result/LPA_Clus.csv', header=None)
-    pd_lou = pd.read_csv('/home/striker/Downloads/Processed Final Result/Louvain_Clus.csv', header=None)
-    pd_fuzzy = pd.read_csv('/home/striker/Downloads/Processed Final Result/Fuzzy_Clus.csv', header=None)
+    pd_pca = pd.read_csv('/home/striker/Downloads/Processed Final Result/PCA_Dunn.csv', header=None)
+    pd_lpa = pd.read_csv('/home/striker/Downloads/Processed Final Result/LPA_Dunn.csv', header=None)
+    pd_lou = pd.read_csv('/home/striker/Downloads/Processed Final Result/Louvain_Dunn.csv', header=None)
+    pd_fuzzy = pd.read_csv('/home/striker/Downloads/Processed Final Result/Fuzzy_Dunn.csv', header=None)
     pd_index = pd.read_csv('/home/striker/Downloads/Processed Final Result/New_order_by_countries.csv')
 
     new_pd = pd.DataFrame()
@@ -125,24 +125,19 @@ def create_new_heatmap(year_index):
         horizontal_lines.append(new_pd[new_pd["Region"] == region].values[-1][-2])
 
     sns.heatmap(new_pd[["PCA", "LPA", "Louvain", "Fuzzy"]], cmap="YlGnBu", linewidths=1)
-    x1 = [0, 1, 2, 3]
-    squad = [' PCA', '  LPA', ' Louvain', ' Fuzzy']
 
-
-    ax1.set_xticklabels(squad,  ha ='center', minor=False)
-    ax1.set_xticks(x1)
     plt.xlabel('Models')
 
     ax1.set_yticks(y1)
-    ax1.set_yticklabels(new_pd["Country"], minor=False, rotation='horizontal')
+    ax1.set_yticklabels(new_pd["Country"], minor=False, rotation='horizontal', size=8)
     plt.ylabel('Country')
 
     for line in horizontal_lines:
-        ax1.axhline(line, 0, 1, linewidth=3, c='r')
+        ax1.axhline(line, 0, 1, linewidth=1.5, c='r')
     # plt.show()
     print ax1.get_xticklabels()
-    plt.savefig('/home/striker/Documents/Factor-Analysis/Graph/Cluster_2014.png')
+    plt.savefig('/home/striker/Documents/Factor-Analysis/Graph/Dunn_2010.png')
     plt.close()
 
 if __name__ == '__main__':
-    create_new_heatmap(15)
+    create_new_heatmap(11)
